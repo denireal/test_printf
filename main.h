@@ -23,26 +23,27 @@ bool zero;
 bool minus;
 int width;
 int precision;
+int i;
 bool h;
 bool l;
+char length_modifier;
 } fmt_flags_t;
 
 int _printf(const char *format, ...);
 int _putchar(char c);
 int _puts(char *str);
-int (*get_print(char s))(va_list, fmt_flags_t *);
-int print_ascii(va_list l, fmt_flags_t *f);
-int print_binary(va_list l, fmt_flags_t *f);
+int (*handle_print(char s))(va_list, fmt_flags_t *);
+int print_ascii(va_list args, fmt_flags_t *fmt_flags);
+int print_binary(va_list args, fmt_flags_t *fmt_flags);
 int print_decimal(va_list args, fmt_flags_t *fmt_flags);
 int print_unsigned(va_list args, fmt_flags_t *fmt_flags);
 int print_octal(va_list args, fmt_flags_t *fmt_flags);
 int print_hex(va_list args, fmt_flags_t *fmt_flags);
 int print_hex_upper(va_list args, fmt_flags_t *fmt_flags);
 int print_pointer(va_list args, fmt_flags_t *fmt_flags);
-int print_rev(va_list r);
-int print_rot13(va_list l, fmt_flags_t *f);
-char *convert(unsigned long int num, int base, int is_lowercase,
-char *result, size_t buf_size);
+int print_rev(va_list args, fmt_flags_t *fmt_flags);
+int print_rot13(va_list args, fmt_flags_t *fmt_flags);
+char *convert(unsigned long int num, int base, int lowercase);
 
 /**
  * print_char - Prints a character
@@ -115,7 +116,7 @@ void handle_field_width(const char *fmt, fmt_flags_t *fmt_flags);
  * precision and updates the
  * fmt_flags structure accordingly.
  */
-void handle_precision(const char *fmt, fmt_flags_t *fmt_flags);
+void handle_precision(const char *fmt, fmt_flags_t *fmt_flags, va_list args);
 
 /**
  * handle_zero_flag - Update fmt_flags based on the '0' flag

@@ -11,52 +11,21 @@
 *
 * Return: Pointer to the result string, or NULL on failure
 */
-char *convert(unsigned long int num, int base, int is_lowercase,
-char *result, size_t buf_size)
+char *convert(unsigned long int num, int base, int lowercase)
 {
-static const char *lower_hex = "0123456789abcdef";
-static const char *upper_hex = "0123456789ABCDEF";
-const char *hex_chars = (is_lowercase) ? lower_hex : upper_hex;
-char *ptr = result + buf_size - 1;
+static char *rep;
+static char buffer[50];
+char *ptr;
 
+rep = (lowercase)
+? "0123456789abcdef"
+: "0123456789ABCDEF";
+ptr = &buffer[49];
 *ptr = '\0';
-
-if (buf_size == 0 || result == NULL)
-return (NULL);
-
-if (num == 0)
-{
-if (buf_size >= 2)
-{
-*(--ptr) = '0';
-return ptr;
-}
-else
-{
-return (NULL);
-}
-}
-
-while (num != 0 && buf_size > 1)
-{
-if (ptr <= result)
-return (NULL);
-
-switch (base)
-{
-case 16:
-*(--ptr) = hex_chars[num % 16];
-break;
-case 8:
-*(--ptr) = hex_chars[num % 8];
-break;
-default:
-*(--ptr) = hex_chars[num % 10];
-break;
-}
-
+do {
+*--ptr = rep[num % base];
 num /= base;
-}
+} while (num != 0);
 
 return (ptr);
 }

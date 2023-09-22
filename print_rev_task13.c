@@ -2,24 +2,27 @@
 #include <stdio.h>
 #include "main.h"
 /**
-*print_rev - prints astring in reverse
-*@r: string to print
-*Return: number of chars printed
-*/
-int print_rev(va_list r)
+ * print_rev - prints a string in reverse
+ * @args: va_list arguments from _printf
+ * @fmt_flags: pointer to the struct fmt_flags (unused)
+ * Return: length of the printed string
+ */
+int print_rev(va_list args, fmt_flags_t *fmt_flags)
 {
-char *st;
-int i, j = 0;
+char *s;
+int j, i = 0;
 
-st = va_arg(r, char *);
-if (st == NULL)
-st = ")llun(";
-for (i = 0; st[i] != '\0'; i++)
-;
-for (i -= 1 ; i >= 0; i--)
-{
-_putchar(st[i]);
-j++;
-}
-return (j);
+(void)fmt_flags;
+s = va_arg(args, char *);
+
+if (!s)
+s = "(null)";
+
+while (s[i])
+i++;
+
+for (j = i - 1; j >= 0; j--)
+_putchar(s[j]);
+
+return (i);
 }

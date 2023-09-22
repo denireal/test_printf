@@ -11,9 +11,8 @@
 int _printf(const char *format, ...)
 {
 va_list args;
-int (*print_func)(va_list args, fmt_flags_t *fmt_flags);
 const char *fmt;
-fmt_flags_t fmt_flags = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+fmt_flags_t fmt_flags = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int char_count = 0;
 
 va_start(args, format);
@@ -36,14 +35,49 @@ handle_length_modifier(fmt, &fmt_flags);
 handle_field_width(fmt, &fmt_flags);
 handle_precision(fmt, &fmt_flags, args);
 
-print_func = get_print(*fmt);
+switch (*fmt)
+{
+case 'c':
+char_count += print_char(args, &fmt_flags);
+break;
+case 's':
+char_count += print_string(args, &fmt_flags);
+break;
+case '%':
+char_count += print_percent_symbol(args, &fmt_flags);
+break;
+case 'd':
+case 'i':
+char_count += print_decimal(args, &fmt_flags);
+break;
+case 'b':
+char_count += print_binary(args, &fmt_flags);
+break;
+case 'u':
+char_count += print_unsigned(args, &fmt_flags);
+break;
+case 'o':
+char_count += print_octal(args, &fmt_flags);
+break;
+case 'x':
+char_count += print_hex(args, &fmt_flags);
+break;
+case 'X':
+char_count += print_hex_upper(args, &fmt_flags);
+break;
+case 'S':
+char_count += print_string(args, &fmt_flags);
+break;
+default:
+char_count += _putchar('%');
+char_count += _putchar(*fmt);
+continue;
+}
+
 if (fmt_flags.minus)
 {
 fmt_flags.zero = false;
 }
-char_count += (print_func)
-? print_func(args, &fmt_flags)
-: _printf("%%%c", *fmt);
 }
 else
 {
